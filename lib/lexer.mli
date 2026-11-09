@@ -13,7 +13,7 @@ val create : ?features:Feature.t list -> Sedlexing.lexbuf -> t
     that positions count bytes and any byte sequence can be read, as Nix does.
 *)
 
-val token : t -> Token.token * Lexing.position * Lexing.position
+val token : t -> Tokens.token * Lexing.position * Lexing.position
 (** Returns the next token, skipping whitespace and comments.
 
     @raise Error on malformed input. *)
@@ -21,10 +21,17 @@ val token : t -> Token.token * Lexing.position * Lexing.position
 val comments : t -> Ast.comment list
 (** The comments read so far, in source order. *)
 
-val name : Token.token -> string
+val name : Tokens.token -> string
 (** The kind of the token for error messages, such as ["'=='"] or
     ["identifier"]. *)
 
-val describe : Token.token -> string
+val describe : Tokens.token -> string
 (** As {!name}, but with the text of the token when it varies, such as
     ["identifier 'foo'"]. *)
+
+val in_path : t -> bool
+(** Whether the last token read continues a path, as the [b] of [./a/${x}b]
+    does. *)
+
+val in_string : t -> bool
+(** Whether the lexer is inside a string, outside of any interpolation. *)

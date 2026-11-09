@@ -3,15 +3,21 @@ module Ast = Ast
 module Feature = Feature
 module Syntax_error = Syntax_error
 module Ast_printer = Ast_printer
+module Ast_iterator = Ast_iterator
+module Ast_mapper = Ast_mapper
 module Literal = Literal
 module Check = Check
+module Printer = Printer
+module Token = Token
+module Locate = Locate
+module Line_index = Line_index
 module I = Parser.MenhirInterpreter
 
 type parsed = { expr : Ast.expr; comments : Ast.comment list }
 
 (* One token of each kind, to ask the parser which kinds it would accept. *)
 let all_tokens =
-  Token.
+  Tokens.
     [
       ID "";
       INT 0L;
@@ -79,7 +85,7 @@ let max_expected = 4
 
 let expected ~features checkpoint position =
   let enabled = function
-    | Token.PIPE_INTO | PIPE_FROM -> List.mem Feature.Pipe_operators features
+    | Tokens.PIPE_INTO | PIPE_FROM -> List.mem Feature.Pipe_operators features
     | _ -> true
   in
   let names =
@@ -128,3 +134,9 @@ let parse_string ?(filename = "") ?(features = []) source =
   | Ok expr -> Ok { expr; comments = Lexer.comments lexer }
   | Error _ as e -> e
   | exception Lexer.Error e -> Error e
+
+let parse_channel ?filename ?features ic =
+  parse_string ?filename ?features (In_channel.input_all ic)
+
+let parse_file ?features path =
+  In_channel.with_open_bin path (parse_channel ~filename:path ?features)

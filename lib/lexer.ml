@@ -1,4 +1,4 @@
-open Token
+open Tokens
 
 type mode =
   | Default
@@ -356,3 +356,9 @@ let describe = function
   | SEARCH_PATH p -> Printf.sprintf "path '<%s>'" p
   | URI u -> Printf.sprintf "URI '%s'" u
   | token -> name token
+
+let in_path t =
+  match t.modes with (In_path | In_path_slash) :: _ -> true | _ -> false
+
+let in_string t =
+  match t.modes with (String | Indented_string) :: _ -> true | _ -> false

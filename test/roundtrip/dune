@@ -1,0 +1,7 @@
+; Checks the printer, the tokens and the mapper on real files. Run it on a
+; directory with `find DIR -name '*.nix' | xargs dune exec ...`; it is not
+; part of `dune test` because it needs such a corpus.
+
+(executable
+ (name main)
+ (libraries flocaml))
