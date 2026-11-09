@@ -1,0 +1,3 @@
+# Cram tests compare their output byte for byte, and are not Perl, Raku or
+# Terra as their extension suggests to GitHub.
+*.t text eol=lf -linguist-detectable
