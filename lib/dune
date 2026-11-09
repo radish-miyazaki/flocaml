@@ -1,0 +1,17 @@
+(library
+ (name flocaml)
+ (public_name flocaml)
+ (libraries menhirLib sedlex)
+ (modules_without_implementation ast)
+ (preprocess
+  (pps sedlex.ppx)))
+
+(menhir
+ (modules token)
+ (explain false)
+ (flags --only-tokens))
+
+(menhir
+ (modules token parser)
+ (merge_into parser)
+ (flags --external-tokens Token --table --strict))
