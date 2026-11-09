@@ -1,5 +1,5 @@
 (* Prints each file in the format of [nix-instantiate --parse], one line per
-   file, or a line starting with "error:" when the file cannot be read. *)
+   file, or a line starting with "error:" when Nix would reject the file. *)
 
 let absolute path =
   if Filename.is_relative path then Filename.concat (Sys.getcwd ()) path
@@ -10,8 +10,11 @@ let show home path =
   let source = In_channel.with_open_bin path In_channel.input_all in
   match Flocaml.parse_string ~filename:path source with
   | Ok { expr; _ } -> (
-      try Nix_show.to_string ctx expr
-      with Nix_show.Unsupported msg -> "error: " ^ msg)
+      match Flocaml.Check.expr expr with
+      | e :: _ -> Format.asprintf "error: %a" Flocaml.Check.pp e
+      | [] -> (
+          try Nix_show.to_string ctx expr
+          with Nix_show.Unsupported msg -> "error: " ^ msg))
   | Error e -> Format.asprintf "error: %a" Flocaml.Syntax_error.pp e
 
 let () =

@@ -15,7 +15,8 @@ Early development. The API is not stable yet.
 
 On every `.nix` file in nixpkgs, flocaml produces the same expressions as
 `nix-instantiate --parse`. `test/oracle/compare.sh DIR` runs this comparison
-on the files under `DIR`.
+on the files under `DIR`, and `test/oracle/cases.sh` runs it on expressions
+that Nix rejects after parsing.
 
 ## Usage
 
@@ -25,8 +26,16 @@ match Flocaml.parse_string ~filename:"default.nix" source with
 | Error e -> Format.eprintf "%a@." Flocaml.Syntax_error.pp e
 ```
 
+Some expressions are syntactically valid, but Nix rejects them before
+evaluation: an attribute defined twice, a duplicate function argument, or a
+variable that is not bound. `Flocaml.Check.expr` finds these:
+
+```ocaml
+List.iter (Format.eprintf "%a@." Flocaml.Check.pp) (Flocaml.Check.expr expr)
+```
+
 The `flocaml` command prints the syntax tree of a file, or checks files for
-syntax errors:
+all of these errors:
 
 ```console
 $ flocaml parse -e '{ a ? 1 }: a + 1'

@@ -3,6 +3,8 @@ module Ast = Ast
 module Feature = Feature
 module Syntax_error = Syntax_error
 module Ast_printer = Ast_printer
+module Literal = Literal
+module Check = Check
 module I = Parser.MenhirInterpreter
 
 type parsed = { expr : Ast.expr; comments : Ast.comment list }

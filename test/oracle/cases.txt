@@ -1,0 +1,92 @@
+{ a = 1; a = 2; }
+{ a = 1; "a" = 2; }
+{ a = 1; ${"a"} = 2; }
+{ ${"a"} = 1; ${"a"} = 2; }
+{ ${''a''} = 1; a = 2; }
+{ ${("a")} = 1; a = 2; }
+{ "${"a"}" = 1; a = 2; }
+{ "a.b" = 1; a.b = 2; }
+{ a.b = 1; a.b = 2; }
+{ a = 1; a.b = 2; }
+{ a.b = 1; a = 2; }
+{ a = {}; a.b = 2; }
+{ a = ({}); a.b = 2; }
+{ a.b = 1; a = { c = 2; }; }
+{ a.b = 1; a = { b = 2; }; }
+{ a.b.c = 1; a = { b.d = 2; }; }
+{ a = { b = 1; }; a = { c = 2; }; }
+{ a = { b = 1; }; a = { b = 2; }; }
+{ a = { b = 1; }; a = { b.c = 2; }; }
+{ a = { b = {}; }; a = { b.c = 2; }; }
+{ a = { b.c = 1; }; a = { b.d = 2; }; }
+{ a = { b = { c = 1; }; }; a = { b = { c = 2; }; }; }
+{ a = { ${"x"} = 1; }; a = { x = 2; }; }
+{ a = { b = 1; }; a = { inherit b; }; }
+{ a = { inherit x; }; a.x = 1; }
+{ a = rec { b = 1; }; a = { c = b; }; }
+{ a = { x = 1; }; a = rec { y = x; }; }
+{ a = { b = rec { c = 1; }; }; a = { b = { d = c; }; }; }
+{ a = { b = { c = 1; }; }; a = { b = rec { d = c; }; }; }
+{ a = { inherit (y) b; }; a = { inherit (z) c; }; }
+{ inherit a; }
+{ inherit a a; }
+{ inherit a; a.b = 1; }
+{ inherit (a) b; a = 1; }
+rec { inherit a; a = 1; }
+rec { inherit (a) b; a = { b = 1; }; }
+rec { a = 1; a = 2; }
+rec { a.b = c; c = 1; }
+{ a.b = c; c = 1; }
+{ ${x} = 1; }
+rec { ${x} = 1; x = "a"; }
+{ a.${x} = 1; }
+let a = 1; a = 2; in a
+let a = 1; inherit a; in a
+let a = { b = 1; }; a = { c = 2; }; in a
+let a.b = 1; a.c = 2; in a
+let ${"a"} = 1; in a
+let ${a} = 1; in 1
+let "${"a"}" = 1; in 1
+let a.${"b"} = 1; in a
+let inherit (a) b; a = { b = 1; }; in b
+let inherit b; in 1
+let { body = a; a = 1; }
+let { a = 1; a = 2; }
+x
+x: x
+x: y
+{ a, a }: a
+{ a } @ a: a
+a @ { a }: a
+{ a, b ? a, a ? 1 }: a
+{ a ? b, b ? 1 }: a
+{ a ? c, b }: a
+{ a, ... } @ b: b
+with x; y
+y: with y; z
+with { }; let a = b; in a
+let a = 1; in with a; b
+__curPos
+let __curPos = 1; in __curPos
+__sub
+true
+builtins
+import ./a.nix
+fetchTree
+<nixpkgs>
+1 - 2
+-x
+a: -a
+a: a * a
+a: a < a
+(a: a) b
+a.b
+a: a.${b}
+a: a ? ${b}
+a: a.b or c
+"${a}"
+a: ''${a} ${b}''
+a: ./a/${b}
+[ a ]
+{ a = x: x; b = a; }
+rec { a = x: b; b = 1; }

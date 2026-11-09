@@ -50,20 +50,32 @@ let parse_cmd =
   Cmd.v (Cmd.info "parse" ~doc)
     Term.(const parse $ features $ comments $ expr $ file)
 
-let check features files =
+let check features globals files =
+  let globals = Flocaml.Check.default_globals @ globals in
   List.fold_left
     (fun status path ->
       match Flocaml.parse_string ~filename:path ~features (read_file path) with
-      | Ok _ -> status
+      | Ok { expr; _ } -> (
+          match Flocaml.Check.expr ~globals expr with
+          | [] -> status
+          | errors ->
+              List.iter (Format.printf "%a@." Flocaml.Check.pp) errors;
+              1)
       | Error e ->
           Format.printf "%a@." Flocaml.Syntax_error.pp e;
           1)
     0 files
 
 let check_cmd =
+  let globals =
+    let doc =
+      "Treat $(docv) as bound at the top level, in addition to the builtins."
+    in
+    Arg.(value & opt_all string [] & info [ "global" ] ~docv:"NAME" ~doc)
+  in
   let files = Arg.(value & pos_all file [] & info [] ~docv:"FILE") in
-  let doc = "report the syntax errors in Nix files" in
-  Cmd.v (Cmd.info "check" ~doc) Term.(const check $ features $ files)
+  let doc = "report the errors that Nix finds in files before evaluation" in
+  Cmd.v (Cmd.info "check" ~doc) Term.(const check $ features $ globals $ files)
 
 let () =
   let doc = "parser for the Nix expression language" in

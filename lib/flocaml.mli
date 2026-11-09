@@ -11,6 +11,8 @@ module Ast = Ast
 module Feature = Feature
 module Syntax_error = Syntax_error
 module Ast_printer = Ast_printer
+module Literal = Literal
+module Check = Check
 
 type parsed = { expr : Ast.expr; comments : Ast.comment list }
 
@@ -19,7 +21,8 @@ val parse_string :
   ?features:Feature.t list ->
   string ->
   (parsed, Syntax_error.t) result
-(** [parse_string source] parses a whole Nix expression.
+(** [parse_string source] parses a whole Nix expression. It accepts some
+    expressions that Nix rejects after parsing, which {!Check.val-expr} finds.
 
     @param filename the file name recorded in locations.
     @param features the experimental features to accept. None by default. *)

@@ -91,7 +91,9 @@ let rec expr ctx (e : Ast.expr) =
   | Int n -> Verbatim (Int64.to_string n)
   | Float f -> Verbatim (Printf.sprintf "%g" f)
   | String parts -> concat (List.map (string_part ctx) parts)
-  | Indented_string parts -> concat (strip_indentation ctx parts)
+  | Indented_string parts ->
+      concat
+        (List.map (string_part ctx) (Flocaml.Literal.strip_indentation parts))
   | Path [] -> assert false
   | Path (head :: rest) -> (
       let head =
@@ -156,14 +158,12 @@ and string_part ctx = function
   | Ast.Text s | Escape s -> String s
   | Interpolation e -> expr ctx e
 
-(* A name that desugars to a plain string is static, whether it is written
-   [a], ["a"] or [${"a"}]. *)
 and name ctx ({ txt; _ } : Ast.attr Ast.loc) =
-  let of_expr = function String s -> Static s | e -> Dynamic e in
-  match txt with
-  | Name x -> Static x
-  | Quoted parts -> of_expr (concat (List.map (string_part ctx) parts))
-  | Dynamic e -> of_expr (expr ctx e)
+  match (Flocaml.Literal.attr_name txt, txt) with
+  | Some s, _ -> Static s
+  | None, Quoted parts -> Dynamic (Concat (List.map (string_part ctx) parts))
+  | None, Dynamic e -> Dynamic (expr ctx e)
+  | None, Name _ -> assert false
 
 and attrs ctx recursive bindings =
   let attrs = new_attrs recursive in
@@ -221,94 +221,19 @@ and merge existing added =
   let offset = List.length existing.inherit_from in
   Hashtbl.iter
     (fun s def ->
-      if Hashtbl.mem existing.defs s then duplicate s;
-      let def =
-        match def with
-        | Inherited_from i -> Inherited_from (i + offset)
-        | d -> d
-      in
-      Hashtbl.replace existing.defs s def)
+      match (Hashtbl.find_opt existing.defs s, def) with
+      | Some (Plain (Attrs e)), Plain (Attrs a) -> merge e a
+      | Some _, _ -> duplicate s
+      | None, _ ->
+          let def =
+            match def with
+            | Inherited_from i -> Inherited_from (i + offset)
+            | d -> d
+          in
+          Hashtbl.replace existing.defs s def)
     added.defs;
   existing.inherit_from <- existing.inherit_from @ added.inherit_from;
   existing.dynamic <- added.dynamic @ existing.dynamic
-
-(* Nix's [stripIndentation]. Escapes and interpolations end the leading
-   whitespace of a line without counting as indentation, and only the last
-   token may lose a trailing line of spaces. *)
-and strip_indentation ctx parts =
-  let at_line_start = ref true
-  and current = ref 0
-  and min_indent = ref max_int in
-  let end_of_indent () =
-    if !at_line_start then begin
-      at_line_start := false;
-      min_indent := min !min_indent !current
-    end
-  in
-  List.iter
-    (function
-      | Ast.Text s ->
-          String.iter
-            (fun c ->
-              if !at_line_start then
-                match c with
-                | ' ' -> incr current
-                | '\n' -> current := 0
-                | _ -> end_of_indent ()
-              else if c = '\n' then begin
-                at_line_start := true;
-                current := 0
-              end)
-            s
-      | Escape _ | Interpolation _ -> end_of_indent ())
-    parts;
-  let min_indent = !min_indent in
-  let at_line_start = ref true and dropped = ref 0 in
-  let trim ~last s =
-    let b = Buffer.create (String.length s) in
-    String.iter
-      (fun c ->
-        if !at_line_start then (
-          match c with
-          | ' ' ->
-              if !dropped >= min_indent then Buffer.add_char b c;
-              incr dropped
-          | '\n' ->
-              dropped := 0;
-              Buffer.add_char b c
-          | c ->
-              at_line_start := false;
-              dropped := 0;
-              Buffer.add_char b c)
-        else begin
-          Buffer.add_char b c;
-          if c = '\n' then at_line_start := true
-        end)
-      s;
-    let s = Buffer.contents b in
-    if not last then s
-    else
-      match String.rindex_opt s '\n' with
-      | Some i
-        when String.for_all (( = ) ' ')
-               (String.sub s (i + 1) (String.length s - i - 1)) ->
-          String.sub s 0 (i + 1)
-      | _ -> s
-  in
-  let rec go = function
-    | [] -> []
-    | part :: rest -> (
-        match part with
-        | Ast.Interpolation e ->
-            at_line_start := false;
-            dropped := 0;
-            let e = expr ctx e in
-            e :: go rest
-        | Text s | Escape s ->
-            let s = trim ~last:(rest = []) s in
-            if s = "" then go rest else String s :: go rest)
-  in
-  go parts
 
 let is_keyword = function
   | "if" | "then" | "else" | "assert" | "with" | "let" | "in" | "rec"
