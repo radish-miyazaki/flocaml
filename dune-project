@@ -1,6 +1,6 @@
-(lang dune 3.23)
+(lang dune 3.0)
 
-(using menhir 3.0)
+(using menhir 2.1)
 
 (name flocaml)
 
@@ -11,9 +11,9 @@
 
 (license ISC)
 
-(authors "Yoshiki Hidaka")
+(authors "Yoshiki Hidaka <y.hidaka.kobe@gmail.com>")
 
-(maintainers "Yoshiki Hidaka")
+(maintainers "Yoshiki Hidaka <y.hidaka.kobe@gmail.com>")
 
 (package
  (name flocaml)
@@ -24,7 +24,7 @@
   (nix parser))
  (depends
   (ocaml
-   (>= 5.1))
+   (>= 4.14))
   (menhir
    (and
     :build

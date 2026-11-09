@@ -66,7 +66,7 @@ nix develop -c dune test
 ```
 
 With opam, install `menhir`, `menhirLib`, `sedlex` and `cmdliner`, then run
-`dune build`.
+`dune build`. flocaml needs OCaml 4.14 or later and dune 3.0 or later.
 
 ## License
 

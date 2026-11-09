@@ -3,12 +3,12 @@
  (public_name flocaml)
  (libraries menhirLib sedlex)
  (modules_without_implementation ast)
+ (private_modules lexer parser tokens)
  (preprocess
   (pps sedlex.ppx)))
 
 (menhir
  (modules tokens)
- (explain false)
  (flags --only-tokens))
 
 (menhir

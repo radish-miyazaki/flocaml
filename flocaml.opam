@@ -3,15 +3,15 @@ opam-version: "2.0"
 synopsis: "Parser for the Nix expression language"
 description:
   "flocaml parses Nix expressions into a syntax tree that keeps the source locations of every node and the comments, so tools can inspect and rewrite Nix files without losing their layout."
-maintainer: ["Yoshiki Hidaka"]
-authors: ["Yoshiki Hidaka"]
+maintainer: ["Yoshiki Hidaka <y.hidaka.kobe@gmail.com>"]
+authors: ["Yoshiki Hidaka <y.hidaka.kobe@gmail.com>"]
 license: "ISC"
 tags: ["nix" "parser"]
 homepage: "https://github.com/radish-miyazaki/flocaml"
 bug-reports: "https://github.com/radish-miyazaki/flocaml/issues"
 depends: [
-  "dune" {>= "3.23"}
-  "ocaml" {>= "5.1"}
+  "dune" {>= "3.0"}
+  "ocaml" {>= "4.14"}
   "menhir" {build & >= "20230608"}
   "menhirLib" {>= "20230608"}
   "sedlex" {>= "3.2"}
@@ -33,4 +33,3 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/radish-miyazaki/flocaml.git"
-x-maintenance-intent: ["(latest)"]
