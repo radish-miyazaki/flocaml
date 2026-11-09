@@ -11,8 +11,11 @@ suitable for tools that inspect or rewrite Nix files.
 
 ## Status
 
-Early development. The parser reads every `.nix` file in nixpkgs, but the API
-is not stable yet.
+Early development. The API is not stable yet.
+
+On every `.nix` file in nixpkgs, flocaml produces the same expressions as
+`nix-instantiate --parse`. `test/oracle/compare.sh DIR` runs this comparison
+on the files under `DIR`.
 
 ## Usage
 
