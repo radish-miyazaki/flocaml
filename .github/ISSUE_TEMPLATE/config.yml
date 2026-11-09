@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: OCaml Discuss Forum
+    url: https://discuss.ocaml.org/
+    about: Questions about using OCaml libraries are welcome there.
+  - name: Security vulnerabilities
+    url: https://github.com/radish-miyazaki/flocaml/security/advisories/new
+    about: Please report vulnerabilities privately rather than in an issue.
