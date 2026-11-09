@@ -11,10 +11,8 @@ assignees: ''
 
 ## Desired Behavior
 
-<!-- What you would like flocaml to do, and in which kind of tool you would
-     use it. -->
+<!-- What you would like flocaml to do, and in which kind of tool you would use it. -->
 
 ## Example
 
-<!-- A sketch of the API or the command you have in mind, with a Nix
-     expression it would work on. -->
+<!-- A sketch of the API or the command you have in mind, with a Nix expression it would work on. -->

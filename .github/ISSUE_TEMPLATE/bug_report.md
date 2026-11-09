@@ -19,8 +19,7 @@ assignees: ''
 
 ## Expected Behavior
 
-<!-- For a difference with Nix, the output of
-     `nix-instantiate --parse -E '...'` helps a lot. -->
+<!-- For a difference with Nix, the output of `nix-instantiate --parse -E '...'` helps a lot. -->
 
 ## Actual Behavior
 
