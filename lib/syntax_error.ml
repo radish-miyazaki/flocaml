@@ -1,5 +1,5 @@
 type kind =
-  | Unexpected_token of string
+  | Unexpected_token of { token : string; expected : string list }
   | Unexpected_character of string
   | Unterminated_string
   | Unterminated_comment
@@ -10,7 +10,11 @@ type kind =
 type t = { kind : kind; loc : Location.t }
 
 let message = function
-  | Unexpected_token token -> Printf.sprintf "unexpected %s" token
+  | Unexpected_token { token; expected = [] } ->
+      Printf.sprintf "unexpected %s" token
+  | Unexpected_token { token; expected } ->
+      Printf.sprintf "unexpected %s, expecting %s" token
+        (String.concat " or " expected)
   | Unexpected_character c -> Printf.sprintf "unexpected character %S" c
   | Unterminated_string -> "unterminated string"
   | Unterminated_comment -> "unterminated comment"

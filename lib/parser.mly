@@ -140,9 +140,10 @@ expr_simple:
   | n = FLOAT { mk $loc (Float n) }
   | DQUOTE parts = string_part* DQUOTE { mk $loc (String (merge_text parts)) }
   | IND_STRING_OPEN parts = indented_string_part* IND_STRING_CLOSE
-    { mk $loc (Indented_string (merge_text parts)) }
-  | head = path_head parts = string_part* PATH_END
-    { mk $loc (Path (merge_text (Text head :: parts))) }
+    { mk $loc (Indented_string parts) }
+  | head = path_head PATH_END { mk $loc (Path [ Text head ]) }
+  | head = path_head tail = path_tail PATH_END
+    { mk $loc (Path (Text head :: tail)) }
   | p = SEARCH_PATH { mk $loc (Search_path p) }
   | u = URI { mk $loc (Uri u) }
   | LPAREN e = expr RPAREN { mk $loc (Paren e) }
@@ -157,14 +158,25 @@ expr_simple:
 path_head:
   | p = PATH | p = HOME_PATH { p }
 
-string_part:
+(* Text may follow the head of a path only after an interpolation, so
+   [/a//b] is an error, as in Nix. *)
+path_tail:
+  | texts = text* i = interpolation rest = string_part*
+    { texts @ (i :: rest) }
+
+text:
   | s = STR { Text s }
+
+interpolation:
   | DOLLAR_CURLY e = expr RBRACE { Interpolation e }
+
+string_part:
+  | p = text | p = interpolation { p }
 
 indented_string_part:
   | s = IND_STR { Text s }
   | s = IND_STR_ESCAPE { Escape s }
-  | DOLLAR_CURLY e = expr RBRACE { Interpolation e }
+  | p = interpolation { p }
 
 binding:
   | path = attr_path ASSIGN e = expr SEMI { mkloc $loc (Assign (path, e)) }
@@ -179,12 +191,16 @@ attr:
   | a = static_attr { a }
   | DOLLAR_CURLY e = expr RBRACE { mkloc $loc (Dynamic e) }
 
-(* [inherit] takes no [${e}], as the attribute names must be known before
-   evaluation. *)
+(* [inherit] takes no interpolation, as the attribute names must be known
+   before evaluation. *)
 inherited_attr:
-  | a = static_attr { a }
+  | a = name_attr { a }
+  | DQUOTE parts = text* DQUOTE { mkloc $loc (Quoted (merge_text parts)) }
 
 static_attr:
+  | a = name_attr { a }
+  | DQUOTE parts = string_part* DQUOTE { mkloc $loc (Quoted (merge_text parts)) }
+
+name_attr:
   | x = ID { mkloc $loc (Name x) }
   | OR_KW { mkloc $loc (Name "or") }
-  | DQUOTE parts = string_part* DQUOTE { mkloc $loc (Quoted (merge_text parts)) }

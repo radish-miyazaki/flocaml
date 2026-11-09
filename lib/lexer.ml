@@ -293,14 +293,13 @@ and in_path t mode =
           (PATH_END, start, start))
   | _ -> assert false
 
-let describe = function
-  | ID x -> Printf.sprintf "identifier '%s'" x
-  | INT n -> Printf.sprintf "integer %Ld" n
-  | FLOAT f -> Printf.sprintf "float %g" f
+let name = function
+  | ID _ -> "identifier"
+  | INT _ -> "integer"
+  | FLOAT _ -> "float"
   | STR _ | IND_STR _ | IND_STR_ESCAPE _ -> "string content"
-  | PATH p | HOME_PATH p -> Printf.sprintf "path '%s'" p
-  | SEARCH_PATH p -> Printf.sprintf "path '<%s>'" p
-  | URI u -> Printf.sprintf "URI '%s'" u
+  | PATH _ | HOME_PATH _ | SEARCH_PATH _ -> "path"
+  | URI _ -> "URI"
   | PATH_END -> "end of path"
   | DQUOTE -> "'\"'"
   | IND_STRING_OPEN | IND_STRING_CLOSE -> "''''"
@@ -348,3 +347,12 @@ let describe = function
   | AT -> "'@'"
   | ASSIGN -> "'='"
   | EOF -> "end of input"
+
+let describe = function
+  | ID x -> Printf.sprintf "identifier '%s'" x
+  | INT n -> Printf.sprintf "integer %Ld" n
+  | FLOAT f -> Printf.sprintf "float %g" f
+  | PATH p | HOME_PATH p -> Printf.sprintf "path '%s'" p
+  | SEARCH_PATH p -> Printf.sprintf "path '<%s>'" p
+  | URI u -> Printf.sprintf "URI '%s'" u
+  | token -> name token

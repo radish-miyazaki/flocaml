@@ -34,7 +34,9 @@ and expr_desc =
   | Float of float
   | String of string_part list  (** ["..."] *)
   | Indented_string of string_part list
-      (** [''...''], with the indentation not yet stripped. *)
+      (** [''...''], with the indentation not yet stripped. Each part is one
+          token, so adjacent {!Text} parts can occur; they matter when stripping
+          the indentation. *)
   | Path of string_part list
       (** [./a], [/a], [a/b] or [~/a], possibly with interpolations such as
           [./a/${b}]. The first part is the literal text before the first

@@ -21,6 +21,10 @@ val token : t -> Token.token * Lexing.position * Lexing.position
 val comments : t -> Ast.comment list
 (** The comments read so far, in source order. *)
 
+val name : Token.token -> string
+(** The kind of the token for error messages, such as ["'=='"] or
+    ["identifier"]. *)
+
 val describe : Token.token -> string
-(** A description of the token for error messages, such as ["'=='"] or
+(** As {!name}, but with the text of the token when it varies, such as
     ["identifier 'foo'"]. *)

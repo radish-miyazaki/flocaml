@@ -1,7 +1,10 @@
 (** Errors reported while reading a Nix expression. *)
 
 type kind =
-  | Unexpected_token of string  (** The description of the offending token. *)
+  | Unexpected_token of { token : string; expected : string list }
+      (** The description of the offending token, and of the tokens that could
+          have been there. [expected] is empty when there are too many to be
+          helpful. *)
   | Unexpected_character of string
   | Unterminated_string
   | Unterminated_comment
