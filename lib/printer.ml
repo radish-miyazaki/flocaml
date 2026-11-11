@@ -112,11 +112,25 @@ let float_literal f =
         Printf.sprintf "%.17g" f;
       ]
   in
-  if String.contains s '.' then s
-  else
-    match String.index_opt s 'e' with
-    | Some i -> String.sub s 0 i ^ ".0" ^ String.sub s i (String.length s - i)
-    | None -> s ^ ".0"
+  match String.index_opt s 'e' with
+  | None -> if String.contains s '.' then s else s ^ ".0"
+  | Some i ->
+      let mantissa = String.sub s 0 i in
+      let mantissa =
+        if String.contains mantissa '.' then mantissa else mantissa ^ ".0"
+      in
+      (* The C runtime of Windows prints at least three digits of exponent,
+         as in [1e+020]. *)
+      let sign = s.[i + 1] in
+      let digits = String.sub s (i + 2) (String.length s - i - 2) in
+      let rec skip_zeros j =
+        if j < String.length digits - 1 && digits.[j] = '0' then
+          skip_zeros (j + 1)
+        else j
+      in
+      let j = skip_zeros 0 in
+      Printf.sprintf "%se%c%s" mantissa sign
+        (String.sub digits j (String.length digits - j))
 
 (* What comes right after a character of literal text, to tell whether the
    character must be escaped. *)

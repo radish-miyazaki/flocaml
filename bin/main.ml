@@ -135,6 +135,10 @@ let check_cmd =
   Cmd.v (Cmd.info "check" ~doc) Term.(const check $ features $ globals $ files)
 
 let () =
+  (* On Windows, text mode would turn CRLF into LF on input and LF into CRLF
+     on output, which changes the locations and the printed strings. *)
+  set_binary_mode_in stdin true;
+  set_binary_mode_out stdout true;
   let doc = "parser for the Nix expression language" in
   exit
     (Cmd.eval'

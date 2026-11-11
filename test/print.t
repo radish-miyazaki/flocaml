@@ -64,8 +64,8 @@ Tokens that would run together without a space.
 
 Numbers.
 
-  $ roundtrip '[ 1.5 1.0e+20 0.1 100.0 ]'
-  [ 1.5 1.0e+20 0.1 100.0 ]
+  $ roundtrip '[ 1.5 1.0e+20 1.0e-05 0.1 100.0 ]'
+  [ 1.5 1.0e+20 1.0e-5 0.1 100.0 ]
 
 Strings are escaped only where needed. A pair of dollars keeps the brace
 after it literal.
