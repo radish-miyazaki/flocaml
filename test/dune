@@ -1,2 +1,10 @@
+; MSYS2 rewrites arguments that look like POSIX paths, such as '/a/b', before
+; it runs a Windows program, so the tests would not see their own input.
+
+(env
+ (_
+  (env-vars
+   (MSYS2_ARG_CONV_EXCL "*"))))
+
 (cram
  (deps %{bin:flocaml}))

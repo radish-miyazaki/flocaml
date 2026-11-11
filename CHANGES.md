@@ -1,3 +1,7 @@
+## unreleased
+
+- Keep MSYS2 from rewriting the paths given to the tests, which made them fail on Windows.
+
 ## 0.1.1 (2026-11-11)
 
 - Print the exponent of a float without leading zeros, as `1.0e+20` and not `1.0e+020` on Windows.
