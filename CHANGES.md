@@ -1,4 +1,4 @@
-## unreleased
+## 0.1.2 (2026-11-12)
 
 - Keep MSYS2 from rewriting the paths given to the tests, which made them fail on Windows.
 
