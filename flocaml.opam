@@ -33,3 +33,4 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/radish-miyazaki/flocaml.git"
+x-maintenance-intent: ["(latest)"]
