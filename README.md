@@ -1,5 +1,9 @@
 # nix-syntax
 
+[![CI](https://github.com/radish-miyazaki/nix-syntax/actions/workflows/ci.yml/badge.svg)](https://github.com/radish-miyazaki/nix-syntax/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/radish-miyazaki/nix-syntax)](https://github.com/radish-miyazaki/nix-syntax/releases)
+[![License](https://img.shields.io/github/license/radish-miyazaki/nix-syntax)](LICENSE)
+
 A parser for the [Nix](https://nixos.org) expression language, written in OCaml.
 
 It was called flocaml until version 0.1.2.
