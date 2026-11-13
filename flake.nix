@@ -18,7 +18,7 @@
       packages = forAllSystems (pkgs: {
         default = pkgs.ocamlPackages.buildDunePackage {
           pname = "nix-syntax";
-          version = "0.1.2";
+          version = "0.2.0";
           src = ./.;
           nativeBuildInputs = [ pkgs.ocamlPackages.menhir ];
           buildInputs = with pkgs.ocamlPackages; [
