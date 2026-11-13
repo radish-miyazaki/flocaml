@@ -1,4 +1,4 @@
-## unreleased
+## 0.2.0 (2026-11-13)
 
 - Rename the project from flocaml to nix-syntax, following the naming policy of opam-repository. The package, the library and the command are now `nix-syntax`, and the module is `Nix_syntax`.
 - Declare in the opam file that only the latest version is maintained.
