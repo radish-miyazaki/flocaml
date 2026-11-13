@@ -10,29 +10,29 @@
    Files that do not parse are skipped. Exits with 1 if any line was
    printed. *)
 
-let show e = Format.asprintf "%a" Flocaml.Ast_printer.expr e
+let show e = Format.asprintf "%a" Nix_syntax.Ast_printer.expr e
 
 let check path =
   let source = In_channel.with_open_bin path In_channel.input_all in
-  match Flocaml.parse_string ~filename:path source with
+  match Nix_syntax.parse_string ~filename:path source with
   | Error _ -> []
   | Ok { expr; _ } ->
       let print =
-        match Flocaml.parse_string (Flocaml.Printer.to_string expr) with
+        match Nix_syntax.parse_string (Nix_syntax.Printer.to_string expr) with
         | Ok { expr = again; _ } -> show again = show expr
         | Error _ -> false
         | exception Invalid_argument _ -> false
       in
       let tokens =
-        match Flocaml.Token.tokenize source with
+        match Nix_syntax.Token.tokenize source with
         | Ok tokens ->
             String.concat ""
-              (List.map (fun (t : Flocaml.Token.t) -> t.text) tokens)
+              (List.map (fun (t : Nix_syntax.Token.t) -> t.text) tokens)
             = source
         | Error _ -> false
       in
       let map =
-        let m = Flocaml.Ast_mapper.default_mapper in
+        let m = Nix_syntax.Ast_mapper.default_mapper in
         m.expr m expr = expr
       in
       List.filter_map

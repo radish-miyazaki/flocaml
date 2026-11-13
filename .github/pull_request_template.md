@@ -1,4 +1,4 @@
-<!-- Thank you for contributing to flocaml! For guidelines, see CONTRIBUTING.md. -->
+<!-- Thank you for contributing to nix-syntax! For guidelines, see CONTRIBUTING.md. -->
 
 ## Description
 <!-- Briefly describe your changes. -->

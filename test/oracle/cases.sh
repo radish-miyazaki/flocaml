@@ -1,6 +1,6 @@
 #!/bin/sh
 # Parses each line of test/oracle/cases.txt with both `nix-instantiate --parse`
-# and flocaml, and prints the lines on which they disagree.
+# and nix-syntax, and prints the lines on which they disagree.
 #
 # Usage: test/oracle/cases.sh
 #

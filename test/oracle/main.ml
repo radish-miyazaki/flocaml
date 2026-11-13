@@ -8,14 +8,14 @@ let absolute path =
 let show home path =
   let ctx = { Nix_show.base_dir = Filename.dirname (absolute path); home } in
   let source = In_channel.with_open_bin path In_channel.input_all in
-  match Flocaml.parse_string ~filename:path source with
+  match Nix_syntax.parse_string ~filename:path source with
   | Ok { expr; _ } -> (
-      match Flocaml.Check.expr expr with
-      | e :: _ -> Format.asprintf "error: %a" Flocaml.Check.pp e
+      match Nix_syntax.Check.expr expr with
+      | e :: _ -> Format.asprintf "error: %a" Nix_syntax.Check.pp e
       | [] -> (
           try Nix_show.to_string ctx expr
           with Nix_show.Unsupported msg -> "error: " ^ msg))
-  | Error e -> Format.asprintf "error: %a" Flocaml.Syntax_error.pp e
+  | Error e -> Format.asprintf "error: %a" Nix_syntax.Syntax_error.pp e
 
 let () =
   let home = Option.value (Sys.getenv_opt "HOME") ~default:"" in

@@ -1,7 +1,7 @@
 (* Tests of the library functions that the cram tests do not reach through
    the command line. Prints each failure and exits with 1 if there is any. *)
 
-open Flocaml
+open Nix_syntax
 
 let failures = ref 0
 
@@ -159,9 +159,9 @@ let iterator () =
     (List.rev !found) (String.concat ", ")
 
 let parse_file () =
-  let path = Filename.temp_file "flocaml" ".nix" in
+  let path = Filename.temp_file "nix-syntax" ".nix" in
   Out_channel.with_open_bin path (fun oc -> output_string oc "1 +");
-  let result = Flocaml.parse_file path in
+  let result = Nix_syntax.parse_file path in
   Sys.remove path;
   match result with
   | Error { loc; _ } ->

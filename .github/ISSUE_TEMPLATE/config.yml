@@ -4,5 +4,5 @@ contact_links:
     url: https://discuss.ocaml.org/
     about: Questions about using OCaml libraries are welcome there.
   - name: Security vulnerabilities
-    url: https://github.com/radish-miyazaki/flocaml/security/advisories/new
+    url: https://github.com/radish-miyazaki/nix-syntax/security/advisories/new
     about: Please report vulnerabilities privately rather than in an issue.

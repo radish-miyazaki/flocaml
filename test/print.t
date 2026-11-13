@@ -2,10 +2,10 @@ The printer gives back an expression that parses to the same tree. This
 helper prints an expression and says if the tree changes.
 
   $ roundtrip () {
-  >   flocaml parse --expr="$1" > before
-  >   flocaml print --expr="$1" > printed.nix
+  >   nix-syntax parse --expr="$1" > before
+  >   nix-syntax print --expr="$1" > printed.nix
   >   cat printed.nix
-  >   flocaml parse printed.nix > after
+  >   nix-syntax parse printed.nix > after
   >   cmp -s before after || echo "TREE CHANGED"
   > }
 
@@ -85,7 +85,7 @@ after it literal.
 
 Layout follows the width of the line.
 
-  $ flocaml print -e '{ pkgs, lib, ... }: { environment.systemPackages = with pkgs; [ git ripgrep fd jq ]; programs.zsh.enable = true; }'
+  $ nix-syntax print -e '{ pkgs, lib, ... }: { environment.systemPackages = with pkgs; [ git ripgrep fd jq ]; programs.zsh.enable = true; }'
   { pkgs, lib, ... }:
   {
     environment.systemPackages = with pkgs; [ git ripgrep fd jq ];
