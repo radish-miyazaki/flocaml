@@ -1,6 +1,6 @@
-; Compares flocaml with Nix's own parser. Run test/oracle/compare.sh after
+; Compares nix-syntax with Nix's own parser. Run test/oracle/compare.sh after
 ; building; it is not part of `dune test` because it needs Nix.
 
 (executable
  (name main)
- (libraries flocaml))
+ (libraries nix-syntax))

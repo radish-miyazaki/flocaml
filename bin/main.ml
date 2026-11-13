@@ -7,7 +7,9 @@ let read_file = function
 let features =
   let feature =
     Arg.enum
-      (List.map (fun f -> (Flocaml.Feature.to_string f, f)) Flocaml.Feature.all)
+      (List.map
+         (fun f -> (Nix_syntax.Feature.to_string f, f))
+         Nix_syntax.Feature.all)
   in
   let doc = "Accept the experimental language feature $(docv)." in
   Arg.(value & opt_all feature [] & info [ "feature" ] ~docv:"NAME" ~doc)
@@ -35,19 +37,19 @@ let input =
   Term.(const input $ expr $ file)
 
 let with_tree features (filename, source) f =
-  match Flocaml.parse_string ~filename ~features source with
+  match Nix_syntax.parse_string ~filename ~features source with
   | Ok parsed ->
       f parsed;
       0
   | Error e ->
-      Format.eprintf "%a@." Flocaml.Syntax_error.pp e;
+      Format.eprintf "%a@." Nix_syntax.Syntax_error.pp e;
       1
 
 let parse features show_comments input =
   with_tree features input (fun { expr; comments } ->
-      Format.printf "%a@." Flocaml.Ast_printer.expr expr;
+      Format.printf "%a@." Nix_syntax.Ast_printer.expr expr;
       if show_comments then
-        List.iter (Format.printf "%a@." Flocaml.Ast_printer.comment) comments)
+        List.iter (Format.printf "%a@." Nix_syntax.Ast_printer.comment) comments)
 
 let parse_cmd =
   let comments =
@@ -58,7 +60,7 @@ let parse_cmd =
 
 let print features input =
   with_tree features input (fun { expr; _ } ->
-      Format.printf "%a@." Flocaml.Printer.expr expr)
+      Format.printf "%a@." Nix_syntax.Printer.expr expr)
 
 let print_cmd =
   let doc = "print a Nix expression again from its syntax tree" in
@@ -66,13 +68,13 @@ let print_cmd =
     [
       `S Manpage.s_description;
       `P
-        "Prints the expression as $(b,Flocaml.Printer) does: comments and the \
-         original layout are lost.";
+        "Prints the expression as $(b,Nix_syntax.Printer) does: comments and \
+         the original layout are lost.";
     ]
   in
   Cmd.v (Cmd.info "print" ~doc ~man) Term.(const print $ features $ input)
 
-let token_kind : Flocaml.Token.kind -> string = function
+let token_kind : Nix_syntax.Token.kind -> string = function
   | Whitespace -> "Whitespace"
   | Comment -> "Comment"
   | Keyword -> "Keyword"
@@ -91,16 +93,16 @@ let token_kind : Flocaml.Token.kind -> string = function
   | Punctuation -> "Punctuation"
 
 let tokens features (filename, source) =
-  match Flocaml.Token.tokenize ~filename ~features source with
+  match Nix_syntax.Token.tokenize ~filename ~features source with
   | Ok tokens ->
       List.iter
-        (fun (t : Flocaml.Token.t) ->
-          Format.printf "%a: %s %S@." Flocaml.Location.pp t.loc
+        (fun (t : Nix_syntax.Token.t) ->
+          Format.printf "%a: %s %S@." Nix_syntax.Location.pp t.loc
             (token_kind t.kind) t.text)
         tokens;
       0
   | Error e ->
-      Format.eprintf "%a@." Flocaml.Syntax_error.pp e;
+      Format.eprintf "%a@." Nix_syntax.Syntax_error.pp e;
       1
 
 let tokens_cmd =
@@ -108,18 +110,20 @@ let tokens_cmd =
   Cmd.v (Cmd.info "tokens" ~doc) Term.(const tokens $ features $ input)
 
 let check features globals files =
-  let globals = Flocaml.Check.default_globals @ globals in
+  let globals = Nix_syntax.Check.default_globals @ globals in
   List.fold_left
     (fun status path ->
-      match Flocaml.parse_string ~filename:path ~features (read_file path) with
+      match
+        Nix_syntax.parse_string ~filename:path ~features (read_file path)
+      with
       | Ok { expr; _ } -> (
-          match Flocaml.Check.expr ~globals expr with
+          match Nix_syntax.Check.expr ~globals expr with
           | [] -> status
           | errors ->
-              List.iter (Format.printf "%a@." Flocaml.Check.pp) errors;
+              List.iter (Format.printf "%a@." Nix_syntax.Check.pp) errors;
               1)
       | Error e ->
-          Format.printf "%a@." Flocaml.Syntax_error.pp e;
+          Format.printf "%a@." Nix_syntax.Syntax_error.pp e;
           1)
     0 files
 
@@ -142,5 +146,6 @@ let () =
   let doc = "parser for the Nix expression language" in
   exit
     (Cmd.eval'
-       (Cmd.group (Cmd.info "flocaml" ~doc)
+       (Cmd.group
+          (Cmd.info "nix-syntax" ~doc)
           [ parse_cmd; print_cmd; tokens_cmd; check_cmd ]))

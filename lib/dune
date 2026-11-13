@@ -1,6 +1,6 @@
 (library
- (name flocaml)
- (public_name flocaml)
+ (name nix_syntax)
+ (public_name nix-syntax)
  (libraries menhirLib sedlex)
  (modules_without_implementation ast)
  (private_modules lexer parser tokens)

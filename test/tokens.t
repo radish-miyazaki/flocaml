@@ -4,7 +4,7 @@ The tokens cover the whole source, whitespace and comments included.
   > { x = "a${b}"; # c
   >   y = ./p/${q}; }
   > EOF
-  $ flocaml tokens a.nix
+  $ nix-syntax tokens a.nix
   a.nix:1:1: Punctuation "{"
   a.nix:1:2: Whitespace " "
   a.nix:1:3: Identifier "x"
@@ -36,10 +36,10 @@ The tokens cover the whole source, whitespace and comments included.
 
 Syntax errors do not stop the tokens, but errors of the lexer do.
 
-  $ flocaml tokens -e 'in in'
+  $ nix-syntax tokens -e 'in in'
   <string>:1:1: Keyword "in"
   <string>:1:3: Whitespace " "
   <string>:1:4: Keyword "in"
-  $ flocaml tokens -e '"a'
+  $ nix-syntax tokens -e '"a'
   <string>:1:3: unterminated string
   [1]

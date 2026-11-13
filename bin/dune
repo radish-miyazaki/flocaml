@@ -1,4 +1,4 @@
 (executable
  (name main)
- (public_name flocaml)
- (libraries flocaml cmdliner))
+ (public_name nix-syntax)
+ (libraries nix-syntax cmdliner))

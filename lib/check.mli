@@ -1,8 +1,8 @@
 (** The checks that Nix makes on a syntax tree before evaluating it.
 
     Nix rejects these expressions when it parses them, although they are
-    syntactically valid. {!Flocaml.parse_string} does not make these checks; run
-    {!val-expr} on its result to accept exactly what Nix accepts. *)
+    syntactically valid. {!Nix_syntax.parse_string} does not make these checks;
+    run {!val-expr} on its result to accept exactly what Nix accepts. *)
 
 type kind =
   | Duplicate_attr of { path : string list; previous : Location.t }

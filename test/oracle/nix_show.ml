@@ -1,4 +1,4 @@
-module Ast = Flocaml.Ast
+module Ast = Nix_syntax.Ast
 
 type context = { base_dir : string; home : string }
 
@@ -93,7 +93,8 @@ let rec expr ctx (e : Ast.expr) =
   | String parts -> concat (List.map (string_part ctx) parts)
   | Indented_string parts ->
       concat
-        (List.map (string_part ctx) (Flocaml.Literal.strip_indentation parts))
+        (List.map (string_part ctx)
+           (Nix_syntax.Literal.strip_indentation parts))
   | Path [] -> assert false
   | Path (head :: rest) -> (
       let head =
@@ -159,7 +160,7 @@ and string_part ctx = function
   | Interpolation e -> expr ctx e
 
 and name ctx ({ txt; _ } : Ast.attr Ast.loc) =
-  match (Flocaml.Literal.attr_name txt, txt) with
+  match (Nix_syntax.Literal.attr_name txt, txt) with
   | Some s, _ -> Static s
   | None, Quoted parts -> Dynamic (Concat (List.map (string_part ctx) parts))
   | None, Dynamic e -> Dynamic (expr ctx e)

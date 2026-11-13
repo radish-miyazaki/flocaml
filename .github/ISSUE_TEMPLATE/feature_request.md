@@ -7,11 +7,11 @@ assignees: ''
 
 ---
 
-<!-- Thank you for suggesting an improvement to flocaml! -->
+<!-- Thank you for suggesting an improvement to nix-syntax! -->
 
 ## Desired Behavior
 
-<!-- What you would like flocaml to do, and in which kind of tool you would use it. -->
+<!-- What you would like nix-syntax to do, and in which kind of tool you would use it. -->
 
 ## Example
 

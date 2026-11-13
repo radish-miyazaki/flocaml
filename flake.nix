@@ -17,7 +17,7 @@
     {
       packages = forAllSystems (pkgs: {
         default = pkgs.ocamlPackages.buildDunePackage {
-          pname = "flocaml";
+          pname = "nix-syntax";
           version = "0.1.2";
           src = ./.;
           nativeBuildInputs = [ pkgs.ocamlPackages.menhir ];

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Parses every .nix file under DIR with both `nix-instantiate --parse` and
-# flocaml, and prints the files on which they disagree.
+# nix-syntax, and prints the files on which they disagree.
 #
 # Usage: test/oracle/compare.sh DIR
 #

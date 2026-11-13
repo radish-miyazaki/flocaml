@@ -1,23 +1,23 @@
-# flocaml
+# nix-syntax
 
 A parser for the [Nix](https://nixos.org) expression language, written in OCaml.
 
-The name comes from *flocon*, French for snowflake, and Caml.
+It was called flocaml until version 0.1.2.
 
-flocaml reads Nix expressions into a syntax tree that follows the concrete syntax. Nothing is desugared, parentheses are kept, and every node carries its source location. Comments are collected alongside the tree, and the source can also be read as a lossless list of tokens. This makes it suitable for tools that inspect or rewrite Nix files.
+nix-syntax reads Nix expressions into a syntax tree that follows the concrete syntax. Nothing is desugared, parentheses are kept, and every node carries its source location. Comments are collected alongside the tree, and the source can also be read as a lossless list of tokens. This makes it suitable for tools that inspect or rewrite Nix files.
 
 ## Status
 
-flocaml is in early development, and its API may still change.
+nix-syntax is in early development, and its API may still change.
 
-On every `.nix` file in nixpkgs, flocaml produces the same expressions as `nix-instantiate --parse`. `test/oracle/compare.sh DIR` runs this comparison on the files under `DIR`, and `test/oracle/cases.sh` runs it on expressions that Nix rejects after parsing. `test/roundtrip` checks on the same files that printing a tree gives it back, and that the tokens give back the source.
+On every `.nix` file in nixpkgs, nix-syntax produces the same expressions as `nix-instantiate --parse`. `test/oracle/compare.sh DIR` runs this comparison on the files under `DIR`, and `test/oracle/cases.sh` runs it on expressions that Nix rejects after parsing. `test/roundtrip` checks on the same files that printing a tree gives it back, and that the tokens give back the source.
 
 ## Usage
 
 ```ocaml
-match Flocaml.parse_file "default.nix" with
-| Ok { expr; comments } -> Format.printf "%a@." Flocaml.Printer.expr expr
-| Error e -> Format.eprintf "%a@." Flocaml.Syntax_error.pp e
+match Nix_syntax.parse_file "default.nix" with
+| Ok { expr; comments } -> Format.printf "%a@." Nix_syntax.Printer.expr expr
+| Error e -> Format.eprintf "%a@." Nix_syntax.Syntax_error.pp e
 ```
 
 Besides the parser, the library has the following modules.
@@ -34,22 +34,22 @@ Besides the parser, the library has the following modules.
 | `Literal` | Computes the values of string literals and attribute names as Nix does |
 | `Ast_printer` | Dumps a tree for debugging |
 
-The `flocaml` command gives access to most of them.
+The `nix-syntax` command gives access to most of them.
 
 ```console
-$ flocaml parse -e '{ a ? 1 }: a + 1'
+$ nix-syntax parse -e '{ a ? 1 }: a + 1'
 (Lambda (Param_pattern (a (Int 1))) (Add (Var a) (Int 1)))
-$ flocaml print -e '{a=1;}'
+$ nix-syntax print -e '{a=1;}'
 { a = 1; }
-$ flocaml tokens default.nix
-$ flocaml check default.nix
+$ nix-syntax tokens default.nix
+$ nix-syntax check default.nix
 ```
 
 Experimental syntax such as the pipe operators `|>` and `<|` is rejected unless enabled with `--feature pipe-operators`, or with `~features` in the API.
 
 ## Building
 
-flocaml needs OCaml 4.14 or later and dune 3.0 or later.
+nix-syntax needs OCaml 4.14 or later and dune 3.0 or later.
 
 With Nix, `nix build` builds the package and runs the tests, and `nix develop` gives a shell for working on it.
 

@@ -1,9 +1,9 @@
 (** Printing syntax trees as Nix source.
 
     The output is valid Nix that reads back as the same tree, apart from
-    locations, for any tree that {!Flocaml.parse_string} returns. Comments and
-    the original layout are not kept; see {!Token} for a lossless view of the
-    source.
+    locations, for any tree that {!Nix_syntax.parse_string} returns. Comments
+    and the original layout are not kept; see {!Token} for a lossless view of
+    the source.
 
     Trees built by hand may lack the {!Ast.Paren} nodes that their structure
     needs, as in [Binary (Mul, Binary (Add, a, b), c)]. The printer adds the

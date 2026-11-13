@@ -1,6 +1,6 @@
-# Contributing to flocaml
+# Contributing to nix-syntax
 
-Thank you for your interest in flocaml. Bug reports are the most useful contributions, especially expressions that flocaml reads differently from Nix.
+Thank you for your interest in nix-syntax. Bug reports are the most useful contributions, especially expressions that nix-syntax reads differently from Nix.
 
 For a change larger than a bug fix, please open an issue first to discuss it.
 
@@ -24,11 +24,11 @@ dune test
 
 ## Tests
 
-The files `test/*.t` are [cram tests](https://dune.readthedocs.io/en/stable/tests.html#cram-tests) that run the `flocaml` command. When the output changes, review the difference that `dune test` shows and accept it with `dune promote`.
+The files `test/*.t` are [cram tests](https://dune.readthedocs.io/en/stable/tests.html#cram-tests) that run the `nix-syntax` command. When the output changes, review the difference that `dune test` shows and accept it with `dune promote`.
 
 `test/unit` tests the parts of the library that the command does not reach.
 
-`test/oracle` compares flocaml with `nix-instantiate --parse`. It needs Nix, so it is not part of `dune test`. Run it when you change the lexer, the parser or `Check`.
+`test/oracle` compares nix-syntax with `nix-instantiate --parse`. It needs Nix, so it is not part of `dune test`. Run it when you change the lexer, the parser or `Check`.
 
 ```sh
 test/oracle/cases.sh

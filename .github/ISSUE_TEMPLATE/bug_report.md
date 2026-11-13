@@ -1,13 +1,13 @@
 ---
 name: Bug report
-about: flocaml reads an expression differently from Nix, or misbehaves
+about: nix-syntax reads an expression differently from Nix, or misbehaves
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-<!-- Thank you for reporting a bug in flocaml! -->
+<!-- Thank you for reporting a bug in nix-syntax! -->
 
 ## Input
 
@@ -23,11 +23,11 @@ assignees: ''
 
 ## Actual Behavior
 
-<!-- The output of `flocaml parse`, `flocaml check` or your program. -->
+<!-- The output of `nix-syntax parse`, `nix-syntax check` or your program. -->
 
 ## Specifications
 
-- Version of flocaml (or commit):
+- Version of nix-syntax (or commit):
 - Version of Nix, if relevant (output of `nix --version`):
 - Version of OCaml (output of `ocamlc -version`):
 - Operating system:

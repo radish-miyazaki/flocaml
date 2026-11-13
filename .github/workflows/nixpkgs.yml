@@ -1,4 +1,4 @@
-# Runs flocaml on every file of the nixpkgs pinned in flake.lock, and
+# Runs nix-syntax on every file of the nixpkgs pinned in flake.lock, and
 # compares it with Nix's own parser. It takes a while, so it runs weekly and
 # on demand rather than on every change.
 name: nixpkgs

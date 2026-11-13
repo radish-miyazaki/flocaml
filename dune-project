@@ -2,12 +2,12 @@
 
 (using menhir 2.1)
 
-(name flocaml)
+(name nix-syntax)
 
 (generate_opam_files true)
 
 (source
- (github radish-miyazaki/flocaml))
+ (github radish-miyazaki/nix-syntax))
 
 (license ISC)
 
@@ -16,10 +16,10 @@
 (maintainers "Yoshiki Hidaka <y.hidaka.kobe@gmail.com>")
 
 (package
- (name flocaml)
+ (name nix-syntax)
  (synopsis "Parser for the Nix expression language")
  (description
-  "flocaml parses Nix expressions into a syntax tree that keeps the source locations of every node and the comments, so tools can inspect and rewrite Nix files without losing their layout.")
+  "nix-syntax parses Nix expressions into a syntax tree that keeps the source locations of every node and the comments, so tools can inspect and rewrite Nix files without losing their layout.")
  (tags
   (nix parser))
  (depends
