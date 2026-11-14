@@ -3,3 +3,15 @@ result
 result-*
 .direnv/
 docs/
+
+# AI agents
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+AGENTS.md
+.codex/
+GEMINI.md
+.gemini/
+.cursor/
+.cursorrules
+.github/copilot-instructions.md
