@@ -1,4 +1,8 @@
 (executable
  (name main)
  (public_name nix-syntax)
- (libraries nix-syntax cmdliner))
+ (libraries nix-syntax cmdliner)
+ ; The cram tests reach the library through this command, so its own code is
+ ; measured as well.
+ (instrumentation
+  (backend bisect_ppx)))

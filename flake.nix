@@ -46,6 +46,8 @@
           packages = [
             pkgs.ocamlPackages.ocaml-lsp
             pkgs.ocamlPackages.utop
+            # For measuring test coverage with --instrument-with bisect_ppx.
+            pkgs.ocamlPackages.bisect_ppx
             # Keep in sync with the version in .ocamlformat.
             pkgs.ocamlformat_0_29_0
           ];

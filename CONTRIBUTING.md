@@ -41,6 +41,14 @@ test/oracle/compare.sh /path/to/nixpkgs
 
 A weekly workflow runs the last two on the nixpkgs pinned in `flake.lock`.
 
+To see which parts of the code your tests reach, measure the coverage with [bisect_ppx](https://github.com/aantron/bisect_ppx), which the Nix shell provides, and open `_coverage/html/index.html`. CI does the same and sends the result to [Coveralls](https://coveralls.io/github/radish-miyazaki/nix-syntax).
+
+```sh
+rm -rf _coverage && mkdir -p _coverage/data
+BISECT_FILE=$PWD/_coverage/data/bisect dune runtest --instrument-with bisect_ppx --build-dir "$PWD/_coverage/build" --cache=disabled
+bisect-ppx-report html --coverage-path _coverage/data --source-path _coverage/build/default -o _coverage/html
+```
+
 ## Style
 
 Format the code with `dune fmt`, which uses the version of ocamlformat given in `.ocamlformat`.
