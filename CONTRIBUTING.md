@@ -54,3 +54,36 @@ Use only what the standard library of OCaml 4.14 provides.
 ## Changes
 
 Add an entry to the `unreleased` section of `CHANGES.md` for any change that users can notice.
+
+## Releasing
+
+A release follows these steps, with `X.Y.Z` the new version.
+
+1. Open a pull request that renames `## unreleased` in `CHANGES.md` to `## X.Y.Z (YYYY-MM-DD)` and sets `version` in `flake.nix` to `X.Y.Z`. Merge it with a merge commit once CI passes.
+
+2. Tag the merge commit on `main` and push the tag.
+
+   ```sh
+   git switch main
+   git pull
+   git tag -a vX.Y.Z -m "nix-syntax X.Y.Z"
+   git push origin vX.Y.Z
+   ```
+
+3. The tag starts the release workflow (`.github/workflows/release.yml`). It checks that `flake.nix` has the version of the tag and that `CHANGES.md` has a section for it, builds `nix-syntax-X.Y.Z.tbz` from the tag with `git archive`, and builds and tests the tarball as opam-repository would. It then creates the GitHub Release with the tarball and the section of `CHANGES.md` as notes. The summary of the run gives the `url` section for the opam file, with the sha256 and sha512 checksums.
+
+4. In a fork of [ocaml/opam-repository](https://github.com/ocaml/opam-repository), add `packages/nix-syntax/nix-syntax.X.Y.Z/opam`. Its content is `nix-syntax.opam` of the tag without its first line, the comment that dune generated it, followed by the `url` section from the summary. `x-maintenance-intent` already comes from `nix-syntax.opam.template`. Check the file with `opam lint`.
+
+5. Open the pull request with the title `[new release] nix-syntax (X.Y.Z)`. Its body gives the synopsis, the project page, and the changes of that version.
+
+   ```markdown
+   Parser for the Nix expression language
+
+   - Project page: https://github.com/radish-miyazaki/nix-syntax
+
+   ##### CHANGES:
+
+   (the section of CHANGES.md for X.Y.Z)
+   ```
+
+   The pull request is left to a person, since the maintainers of opam-repository expect one behind it.
