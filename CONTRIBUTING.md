@@ -41,18 +41,13 @@ test/oracle/compare.sh /path/to/nixpkgs
 
 A weekly workflow runs the last two on the nixpkgs pinned in `flake.lock`.
 
-To see which parts of the code the tests reach, run them with [bisect_ppx](https://github.com/aantron/bisect_ppx), which the Nix shell provides.
+To see which parts of the code your tests reach, measure the coverage with [bisect_ppx](https://github.com/aantron/bisect_ppx), which the Nix shell provides, and open `_coverage/html/index.html`. CI does the same and sends the result to [Coveralls](https://coveralls.io/github/radish-miyazaki/nix-syntax).
 
 ```sh
 rm -rf _coverage && mkdir -p _coverage/data
 BISECT_FILE=$PWD/_coverage/data/bisect dune runtest --instrument-with bisect_ppx --build-dir "$PWD/_coverage/build" --cache=disabled
-bisect-ppx-report summary --coverage-path _coverage/data --per-file
-bisect-ppx-report html --coverage-path _coverage/data -o _coverage/html
+bisect-ppx-report html --coverage-path _coverage/data --source-path _coverage/build/default -o _coverage/html
 ```
-
-`BISECT_FILE` must be an absolute path, because the cram tests run in a temporary directory, and its directory must exist. The build directory must be new: dune does not run a cram test again when nothing it depends on has changed, even with `--force`, and `--cache=disabled` keeps dune from restoring the results from its cache.
-
-CI runs the same, keeps the HTML report as an artifact and sends the coverage to [Coveralls](https://coveralls.io/github/radish-miyazaki/nix-syntax).
 
 ## Style
 

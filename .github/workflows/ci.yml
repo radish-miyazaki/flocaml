@@ -165,10 +165,12 @@ jobs:
             nix develop -c bisect-ppx-report summary --coverage-path _coverage/data --per-file
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-          nix develop -c bisect-ppx-report html --coverage-path _coverage/data -o _coverage/html
+          nix develop -c bisect-ppx-report html --coverage-path _coverage/data --source-path _coverage/build/default -o _coverage/html
 
+      # lib/parser.ml is generated, so the reports look for the sources in
+      # the build directory as well.
       - name: Send the coverage to Coveralls
-        run: nix develop -c bisect-ppx-report send-to Coveralls --coverage-path _coverage/data
+        run: nix develop -c bisect-ppx-report send-to Coveralls --coverage-path _coverage/data --source-path _coverage/build/default
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_NUMBER: ${{ github.event.number }}
