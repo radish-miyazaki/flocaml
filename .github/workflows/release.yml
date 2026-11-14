@@ -104,6 +104,10 @@ jobs:
           ocaml-compiler: 5.x
           cache: false
 
+      # As dune-release does on its archives, since the tag may be on a commit
+      # that CI has not seen.
+      - run: opam lint nix-syntax.opam
+
       - run: opam install . --deps-only --with-test
 
       # The build command of the opam file.
