@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/radish-miyazaki/nix-syntax/actions/workflows/ci.yml/badge.svg)](https://github.com/radish-miyazaki/nix-syntax/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/radish-miyazaki/nix-syntax)](https://github.com/radish-miyazaki/nix-syntax/releases)
+[![opam](https://img.shields.io/badge/opam-nix--syntax-blue)](https://ocaml.org/p/nix-syntax)
 [![License](https://img.shields.io/github/license/radish-miyazaki/nix-syntax)](LICENSE)
 
 A parser for the [Nix](https://nixos.org) expression language, written in OCaml.
@@ -15,6 +16,24 @@ nix-syntax reads Nix expressions into a syntax tree that follows the concrete sy
 nix-syntax is in early development, and its API may still change.
 
 On every `.nix` file in nixpkgs, nix-syntax produces the same expressions as `nix-instantiate --parse`. `test/oracle/compare.sh DIR` runs this comparison on the files under `DIR`, and `test/oracle/cases.sh` runs it on expressions that Nix rejects after parsing. `test/roundtrip` checks on the same files that printing a tree gives it back, and that the tokens give back the source.
+
+## Installation
+
+nix-syntax is available from opam.
+
+```sh
+opam install nix-syntax
+```
+
+To use the library in a dune project, add it to `libraries`.
+
+```dune
+(executable
+ (name main)
+ (libraries nix-syntax))
+```
+
+The API documentation is on [ocaml.org](https://ocaml.org/p/nix-syntax).
 
 ## Usage
 
@@ -62,7 +81,7 @@ nix build
 nix develop -c dune test
 ```
 
-With opam, install the dependencies and build with dune.
+With opam, install the dependencies of the source tree and build with dune.
 
 ```sh
 opam install . --deps-only --with-test
