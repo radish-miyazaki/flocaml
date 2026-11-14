@@ -5,7 +5,11 @@
  (modules_without_implementation ast)
  (private_modules lexer parser tokens)
  (preprocess
-  (pps sedlex.ppx)))
+  (pps sedlex.ppx))
+ ; Only active with --instrument-with bisect_ppx, so normal builds do not
+ ; need bisect_ppx.
+ (instrumentation
+  (backend bisect_ppx)))
 
 (menhir
  (modules tokens)

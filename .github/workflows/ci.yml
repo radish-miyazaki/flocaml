@@ -131,3 +131,50 @@ jobs:
 
       # Also runs the tests and the format and documentation checks.
       - run: nix build --print-build-logs
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
+
+      # bisect_ppx comes from the dev shell: the release on opam needs
+      # ppxlib < 0.36, which does not support the latest compilers, and
+      # nixpkgs carries the upstream fixes for newer ppxlib.
+      - name: Run the tests with coverage
+        # The cram tests run the command in a temporary directory, so the
+        # coverage files need an absolute path to outlive it. bisect_ppx does
+        # not create the directory, and when it cannot write there it only
+        # logs to bisect.log in the temporary directory. A separate build
+        # directory keeps the instrumented build apart from the usual one.
+        env:
+          BISECT_FILE: ${{ github.workspace }}/_coverage/data/bisect
+        run: |
+          mkdir -p _coverage/data
+          nix develop -c dune runtest --instrument-with bisect_ppx --build-dir "$PWD/_coverage/build" --cache=disabled
+
+      - name: Summarize the coverage
+        run: |
+          {
+            echo '```'
+            nix develop -c bisect-ppx-report summary --coverage-path _coverage/data --per-file
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          nix develop -c bisect-ppx-report html --coverage-path _coverage/data -o _coverage/html
+
+      - name: Send the coverage to Coveralls
+        run: nix develop -c bisect-ppx-report send-to Coveralls --coverage-path _coverage/data
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_NUMBER: ${{ github.event.number }}
+
+      - name: Upload the report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage
+          path: _coverage/html

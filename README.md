@@ -1,6 +1,7 @@
 # nix-syntax
 
 [![CI](https://github.com/radish-miyazaki/nix-syntax/actions/workflows/ci.yml/badge.svg)](https://github.com/radish-miyazaki/nix-syntax/actions/workflows/ci.yml)
+[![Coverage](https://coveralls.io/repos/github/radish-miyazaki/nix-syntax/badge.svg?branch=main)](https://coveralls.io/github/radish-miyazaki/nix-syntax?branch=main)
 [![Release](https://img.shields.io/github/v/release/radish-miyazaki/nix-syntax)](https://github.com/radish-miyazaki/nix-syntax/releases)
 [![License](https://img.shields.io/github/license/radish-miyazaki/nix-syntax)](LICENSE)
 
